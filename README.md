@@ -1,6 +1,34 @@
-# 26.3-JM 個人用ローカル起動
+# 26.3-JM — GitHub Pages / ローカル起動
 
-[Joey-JM / 26.3-JM](https://github.com/joeymavv/26.3-JM) の配布済みHTMLを、手元のPCだけで起動するための補助スクリプトです。作者によれば26.2を基に一部の26.3機能を追加した独自版です。
+[Joey-JM / 26.3-JM](https://github.com/joeymavv/26.3-JM) の配布済みHTMLを、GitHub Pagesまたは手元のPCで起動するための構成です。作者によれば26.2を基に一部の26.3機能を追加した独自版です。
+
+## GitHub Pagesでブラウザーから起動
+
+公開先（デプロイ成功後）: **https://megaminxkr.github.io/abcde_tr/**
+
+Chromebookも、WebAssembly GCに対応する最新のChromeで上記URLを開けます。PythonやLinux環境は閲覧側には不要です。初回読み込みは約82 MBです。
+
+### 所有者による初回設定
+
+1. リポジトリの **Settings → Pages** を開きます。
+2. **Build and deployment → Source → GitHub Actions** を選びます。
+3. **Actions → Deploy game to GitHub Pages → Run workflow** で `main` を選んで実行します。
+4. `build` と `deploy` の両方が成功したら、公開先URLをChromeで開きます。
+5. Edit Profileで名前を設定してDoneを押し、Singleplayerへ進みます。
+
+Pages設定にプランのアップグレード案内が出る場合、現在のプランではPrivateリポジトリからの公開が使えない可能性があります。必要なプランへ変更するか、リポジトリをPublicへ変更するかを所有者が選択してください。ワークフローはリポジトリの公開範囲を変更しません。
+
+### 自動公開の仕組み
+
+`main` へのpushまたは手動実行で、GitHub Actionsが作者の固定リリースを取得し、SHA-256を検証して `dist/index.html` を作ります。検証成功後に、そのHTMLと `.nojekyll` のみをPagesへ配信します。公開するHTMLは作者の配布物と同一で、Git管理には追加しません。取得・チェックサム検証に失敗した場合は公開処理へ進みません。
+
+ローカルで同じ成果物を作る場合:
+
+```sh
+python3 build_pages.py
+```
+
+ブラウザーに保存したワールドはPCやブラウザープロファイルごとに異なり、GitHubへ同期されません。ローカル起動からPagesへ切り替える場合は、ゲーム内のExport/Importで移行してください。
 
 ## 最も簡単な起動方法（Python不要）
 
@@ -55,13 +83,11 @@ python3 play.py --download-only
 
 チェックサムは同じ配布物であることの確認であり、コードの安全性や権利の保証ではありません。独自にHTMLやクレジットを変更しません。
 
-## GitHubでPrivateにする場合
+## 公開範囲と権利確認
 
-GitHubのリポジトリで Settings → General → Danger Zone → Change repository visibility → Make private を選び、画面に従って確定します。すでにPrivateなら操作不要です。これは所有者側で確認してください。
+GitHub Pagesのサイトは一般公開する構成です。リポジトリをPrivateにしても、通常のPagesサイトはURLを知る第三者が閲覧できます。PrivateリポジトリからのPages公開は、GitHubの契約プランによって利用できない場合があります。
 
-GitHub Pagesは有効化しないでください。リポジトリがPrivateでも、通常のPagesサイトは一般公開されます。このプロジェクトにはPagesの公開ワークフローは含みません。GitHub URLから本人だけがゲームを起動できるサイトを作るには、Pagesのアクセス制御が利用できる契約・組織条件、または認証を備えた別ホスティングの検討が必要です。
-
-個人利用・Private設定だけで著作権や利用規約の問題が解消するとは限りません。この準備は適法性の保証ではなく、ゲーム本体の一般公開を避ける構成です。
+配布元はMinecraft由来のコンテンツ・アセットを含むと説明しています。第三者による再配布の許諾は未確認です。この構成やチェックサムの一致は、再配布の適法性を保証しません。配布物のクレジットは原本のまま維持します。
 
 ## クラウド環境での検証範囲
 
