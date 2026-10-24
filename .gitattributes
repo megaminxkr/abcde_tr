@@ -1,0 +1,2 @@
+# Preserve the release bytes and avoid enormous generated diffs.
+/index.html -text -diff

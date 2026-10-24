@@ -2,15 +2,17 @@
 """Produce a verified, self-contained GitHub Pages site."""
 import shutil
 
-from play import GAME, ROOT, SHA256, digest, prepare
+from play import ROOT, SHA256, digest
 
 
 def main():
-    prepare()
+    source = ROOT / "index.html"
+    if digest(source) != SHA256:
+        raise RuntimeError("Repository index.html differs from the pinned release")
     output = ROOT / "dist"
     output.mkdir(exist_ok=True)
     target = output / "index.html"
-    shutil.copyfile(GAME, target)
+    shutil.copyfile(source, target)
     if digest(target) != SHA256:
         raise RuntimeError("Pages artifact checksum mismatch")
     (output / ".nojekyll").touch()

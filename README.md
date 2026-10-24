@@ -8,21 +8,23 @@
 
 Chromebookも、WebAssembly GCに対応する最新のChromeで上記URLを開けます。PythonやLinux環境は閲覧側には不要です。初回読み込みは約82 MBです。
 
-### 所有者による初回設定
+### URLから起動する方法
 
-1. リポジトリの **Settings → Pages** を開きます。
-2. **Build and deployment → Source → GitHub Actions** を選びます。
-3. **Actions → Deploy game to GitHub Pages → Run workflow** で `main` を選んで実行します。
-4. `build` と `deploy` の両方が成功したら、公開先URLをChromeで開きます。
-5. Edit Profileで名前を設定してDoneを押し、Singleplayerへ進みます。
+上記の公開先URLをChromeで開くだけです。HTMLをPCへ保存する操作、Python、Linux、ローカルサーバーは不要です。通常のWebサイトと同様に、ブラウザーが約82 MBのゲームデータを読み込みます。
 
-Pages設定にプランのアップグレード案内が出る場合、現在のプランではPrivateリポジトリからの公開が使えない可能性があります。必要なプランへ変更するか、リポジトリをPublicへ変更するかを所有者が選択してください。ワークフローはリポジトリの公開範囲を変更しません。
+初回はEdit Profileで名前を設定してDoneを押し、必要ならContinue Anywayを選んでからSingleplayerへ進みます。
 
-### 自動公開の仕組み
+### Pagesの設定
 
-`main` へのpushまたは手動実行で、GitHub Actionsが作者の固定リリースを取得し、SHA-256を検証して `dist/index.html` を作ります。検証成功後に、そのHTMLと `.nojekyll` のみをPagesへ配信します。公開するHTMLは作者の配布物と同一で、Git管理には追加しません。取得・チェックサム検証に失敗した場合は公開処理へ進みません。
+現在のブランチ公開に合わせ、リポジトリ直下にゲーム本体の `index.html` と `.nojekyll` を配置しています。設定が必要な場合は **Settings → Pages → Deploy from a branch → main → / (root) → Save** を選びます。GitHub組み込みの `pages build and deployment` が成功すると反映されます。
 
-ローカルで同じ成果物を作る場合:
+以前の独自GitHub Actions公開ワークフローは削除しました。別々の成果物が同じ公開先を上書きすることを防ぎます。
+
+### 公開ファイル
+
+`index.html` は作者の `26.3-fixed.html` と同じバイト列です。SHA-256は下記の固定情報と一致します。Git LFSのポインターではなく、実際のHTMLをGit管理しています。更新時は配布物の整合性を検証し、約82 MBのファイルをGitで反映してください。GitHubのブラウザー画面のファイルアップロード上限を超えます。
+
+`build_pages.py` はリポジトリ内のHTMLを検証して `dist/` にコピーする補助コマンドです。Pagesのブランチ公開や、閲覧者の起動操作には不要です。
 
 ```sh
 python3 build_pages.py
@@ -67,7 +69,7 @@ python3 play.py
 python3 play.py --download-only
 ```
 
-ゲームは `.private/index.html` に保存され、Git管理対象から除外されます。ワールドの保存場所はこのフォルダーではなくブラウザー側です。
+ローカル起動スクリプトが取得するコピーは `.private/index.html` に保存され、Git管理対象から除外されます。Pages用のルート `index.html` はGit管理対象です。ワールドの保存場所はこのフォルダーではなくブラウザー側です。
 
 ## 保存とバックアップ
 
