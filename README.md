@@ -4,7 +4,7 @@
 
 ## 起動
 
-"https://www.yajusenpaiyarimasune.com"
+"https://megaminxkr.github.io/abcde_tr"
 
 最新のChromeで開いてください。Chromebookでも、Linux・Python・HTMLの手動ダウンロードは不要です。初回は約82 MBを読み込みます。
 
